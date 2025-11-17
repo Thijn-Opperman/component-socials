@@ -55,14 +55,6 @@ export interface SocialsProps {
   // Theme/branding
   theme?: ThemeColors;
   
-  // Layout options
-  columns?: {
-    mobile?: number;
-    tablet?: number;
-    desktop?: number;
-    large?: number;
-  };
-  
   // Spacing
   gap?: string; // Tailwind gap class (bijv. 'gap-4', 'gap-6')
   padding?: string; // Tailwind padding class voor cards (bijv. 'p-4', 'p-6')
@@ -177,7 +169,6 @@ export default function Socials({
   descriptionClassName = '',
   cardClassName = '',
   theme,
-  columns = {},
   gap = 'gap-3',
   padding = 'p-4',
   borderRadius = 'rounded-lg',
@@ -299,7 +290,7 @@ export default function Socials({
               hover:shadow-lg hover:border-transparent
               ${hoverColor}
               ${cardHoverBg} ${cardHoverText}
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-purple-400
               w-full h-full aspect-square
               ${cardShadowClass} ${cardBackdropClass}
               ${cardClassName}

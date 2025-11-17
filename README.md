@@ -12,7 +12,7 @@ Een herbruikbare, standalone React component voor het weergeven van sociale medi
 - ✅ **Toegankelijk** - ARIA labels en keyboard navigation
 - ✅ **Whitelabel / Volledig aanpasbaar** - Pas alle kleuren, spacing, layout en styling aan naar eigen branding
 - ✅ **Custom icons** - Ondersteuning voor custom icons per platform
-- ✅ **Flexibele layout** - Configureerbare grid columns per breakpoint
+- ✅ **Flexibele layout** - Automatische grid layout met auto-fit kolommen
 
 ## 🚀 Getting Started
 
@@ -30,22 +30,27 @@ Open [http://localhost:3000](http://localhost:3000) om de component in actie te 
 
 ### Component gebruiken in een ander project
 
-De component is volledig standalone en kan eenvoudig gekopieerd worden naar elk React project.
+De componenten zijn volledig standalone en kunnen eenvoudig gekopieerd worden naar elk React project.
 
-#### Stap 1: Kopieer de component
+#### Stap 1: Kies wat je nodig hebt
 
-Kopieer **alleen** het bestand `components/Socials.tsx` naar je eigen project.
+- 🔹 **Alleen de Socials grid**  
+  Kopieer `components/Socials.tsx` (en optioneel `components/index.ts` voor re-export) naar je project.
 
-> 💡 **Tip**: Zie `COMPONENT_COPY_GUIDE.md` voor een gedetailleerde kopieer gids.
+- 🔹 **Volledige whitelabel configurator + preview**  
+  Kopieer `components/Socials.tsx` **en** `components/SocialsConfigurator.tsx`.  
+  Deze laatste bevat de editor, state management en voorbeeldlayout.
+
+> 💡 **Tip**: Zie `COMPONENT_COPY_GUIDE.md` voor een stap-voor-stap gids inclusief best practices voor mappenstructuur.
 
 #### Stap 2: Vereisten
 
-De component heeft de volgende vereisten:
+Beide componenten verwachten:
 - React 18+ (of React 19+)
-- Tailwind CSS 4+ (of 3+ met kleine aanpassingen)
-- TypeScript (optioneel maar aanbevolen)
+- Tailwind CSS 4+ (werkt ook met 3.x met minimale tweaks)
+- TypeScript (optioneel maar sterk aangeraden voor types zoals `SocialLink`)
 
-#### Stap 3: Importeer en gebruik
+#### Stap 3A: Socials component gebruiken
 
 ```tsx
 import Socials, { SocialLink } from '@/components/Socials';
@@ -83,60 +88,51 @@ export default function TournamentPage() {
 }
 ```
 
-## 📖 API Reference
+#### Stap 3B: Whitelabel configurator gebruiken
 
-### Props
+```tsx
+import SocialsConfigurator from '@/components/SocialsConfigurator';
 
-| Prop | Type | Verplicht | Default | Beschrijving |
-|------|------|-----------|---------|--------------|
-| `socialLinks` | `SocialLink[]` | ✅ Ja | - | Array van sociale media links |
-| `title` | `string` | ❌ Nee | `"Volg ons"` | Titel boven de socials sectie |
-| `description` | `string` | ❌ Nee | `"Blijf op de hoogte via onze sociale media kanalen"` | Beschrijving onder de titel |
-| `className` | `string` | ❌ Nee | `""` | Extra CSS classes voor de section wrapper |
-| `containerClassName` | `string` | ❌ Nee | `""` | Extra CSS classes voor de container |
-| `titleClassName` | `string` | ❌ Nee | `""` | Extra CSS classes voor de titel |
-| `descriptionClassName` | `string` | ❌ Nee | `""` | Extra CSS classes voor de beschrijving |
-| `cardClassName` | `string` | ❌ Nee | `""` | Extra CSS classes voor elke card |
-| `theme` | `ThemeColors` | ❌ Nee | - | Theme object voor branding (zie hieronder) |
-| `columns` | `object` | ❌ Nee | `{mobile: 2, tablet: 3, desktop: 4, large: 5}` | Grid columns per breakpoint |
-| `gap` | `string` | ❌ Nee | `"gap-3"` | Tailwind gap class voor grid spacing |
-| `padding` | `string` | ❌ Nee | `"p-4"` | Tailwind padding class voor cards |
-| `borderRadius` | `string` | ❌ Nee | `"rounded-lg"` | Tailwind border radius class |
-| `hoverScale` | `boolean` | ❌ Nee | `true` | Enable/disable hover scale effect |
-| `showLabels` | `boolean` | ❌ Nee | `true` | Show/hide platform labels |
-| `iconSize` | `'sm' \| 'md' \| 'lg' \| 'xl'` | ❌ Nee | `"sm"` | Icon size |
-
-### SocialLink Interface
-
-```typescript
-interface SocialLink {
-  platform: 'twitter' | 'facebook' | 'instagram' | 'youtube' | 'twitch' | 'discord' | 'tiktok' | 'website';
-  url: string;
-  label?: string; // Optioneel, gebruikt standaard platform naam als niet opgegeven
-  customIcon?: React.ReactNode; // Optioneel: custom icon component
-  customHoverColor?: string; // Optioneel: custom hover kleur (Tailwind class)
+export default function SocialsBuilderPage() {
+  return <SocialsConfigurator />;
 }
 ```
 
-### ThemeColors Interface
+> De configurator is volledig client-side (`'use client'`) en bundelt alles wat je op de demo ziet: gear-button, uitklappanel, live preview en branding controls.
 
-```typescript
-interface ThemeColors {
-  // Card styling
-  cardBackground?: string; // Tailwind class (bijv. 'bg-blue-50 dark:bg-blue-900')
-  cardBorder?: string; // Tailwind class (bijv. 'border-blue-200')
-  cardText?: string; // Tailwind class (bijv. 'text-blue-900')
-  cardHoverBackground?: string; // Tailwind class voor hover state
-  cardHoverText?: string; // Tailwind class voor hover text
-  
-  // Section styling
-  sectionBackground?: string; // Tailwind class voor section achtergrond
-  titleColor?: string; // Tailwind class voor titel kleur
-  descriptionColor?: string; // Tailwind class voor beschrijving kleur
-  
-  // Platform hover colors (override defaults)
+## 📖 API Reference
+
+### Kernproperties
+
+- `socialLinks` (verplicht): array met alle platforms en URL's (type `SocialLink`)
+- `title` / `description`: copy boven de grid
+- `theme`: object voor branding (card kleuren, titels, hover states, etc.)
+- `gap`, `padding`, `borderRadius`: Tailwind classes voor spacing en rounding
+- `cardClassName` & co: extra classes voor wrapper / container / labels
+- `hoverScale`, `showLabels`, `iconSize`: gedrag en iconformaat
+
+### Types
+
+```ts
+type SocialLink = {
+  platform: 'twitter' | 'facebook' | 'instagram' | 'youtube' | 'twitch' | 'discord' | 'tiktok' | 'website';
+  url: string;
+  label?: string;
+  customIcon?: React.ReactNode;
+  customHoverColor?: string;
+};
+
+type ThemeColors = {
+  cardBackground?: string;
+  cardBorder?: string;
+  cardText?: string;
+  cardHoverBackground?: string;
+  cardHoverText?: string;
+  sectionBackground?: string;
+  titleColor?: string;
+  descriptionColor?: string;
   platformColors?: Partial<Record<SocialLink['platform'], string>>;
-}
+};
 ```
 
 ### Ondersteunde Platforms
@@ -187,20 +183,14 @@ const myBrandTheme: ThemeColors = {
 
 ### 2. Layout Aanpassingen
 
-Pas de layout aan met columns, spacing en padding:
+Pas de layout aan met spacing en padding (de grid gebruikt automatisch `auto-fit` zodat het aantal kolommen per schermgrootte vanzelf meeschakelt):
 
 ```tsx
 <Socials
   socialLinks={socialLinks}
-  columns={{
-    mobile: 2,   // 2 kolommen op mobiel
-    tablet: 3,   // 3 kolommen op tablet
-    desktop: 4,  // 4 kolommen op desktop
-    large: 5     // 5 kolommen op grote schermen
-  }}
-  gap="gap-6"           // Meer ruimte tussen cards
-  padding="p-8"          // Meer padding in cards
-  borderRadius="rounded-2xl"  // Ronde hoeken
+  gap="gap-6"              // Meer ruimte tussen cards
+  padding="p-8"            // Meer padding in cards
+  borderRadius="rounded-2xl" // Ronde hoeken
 />
 ```
 
@@ -279,7 +269,6 @@ Combineer alle opties voor volledige controle:
   description="Blijf op de hoogte"
   socialLinks={socialLinks}
   theme={myBrandTheme}
-  columns={{ mobile: 3, tablet: 4, desktop: 5, large: 6 }}
   gap="gap-5"
   padding="p-7"
   borderRadius="rounded-3xl"
@@ -298,9 +287,10 @@ Combineer alle opties voor volledige controle:
 ```
 component-socials/
 ├── components/
-│   └── Socials.tsx          # De hoofdcomponent
+│   ├── Socials.tsx              # De hoofdcomponent (grid)
+│   └── SocialsConfigurator.tsx  # Optionele whitelabel editor + preview
 ├── app/
-│   ├── page.tsx             # Voorbeeld gebruik
+│   ├── page.tsx                 # Demo pagina die SocialsConfigurator rendert
 │   ├── layout.tsx
 │   └── globals.css
 └── README.md

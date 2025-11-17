@@ -4,8 +4,10 @@ Deze gids legt uit hoe je de Socials component kunt kopiëren naar een ander pro
 
 ## 📦 Wat te kopiëren
 
-Kopieer het volgende bestand:
-- `components/Socials.tsx` - De hoofdcomponent
+Kies één van de volgende opties:
+
+- `components/Socials.tsx` - De hoofdcomponent (grid) zonder configurator
+- `components/SocialsConfigurator.tsx` - Volledige whitelabel editor + live preview (importeert automatisch `Socials`)
 
 ## ✅ Vereisten
 
@@ -16,9 +18,12 @@ De component heeft de volgende vereisten:
 
 ## 🚀 Stappen
 
-### Stap 1: Kopieer de component
+### Stap 1: Kopieer de component(en)
 
-Kopieer `components/Socials.tsx` naar je eigen project in een `components` folder (of een andere folder naar keuze).
+- Alleen grid nodig? Kopieer `components/Socials.tsx`.
+- Hele configurator nodig? Kopieer zowel `components/Socials.tsx` als `components/SocialsConfigurator.tsx`.
+
+Plaats ze in een `components` map (of een map naar keuze) in je eigen project.
 
 ### Stap 2: Installeer vereisten (als nog niet gedaan)
 
@@ -36,28 +41,28 @@ yarn add -D tailwindcss
 import Socials, { SocialLink } from '@/components/Socials';
 
 const socialLinks: SocialLink[] = [
-  {
-    platform: 'twitter',
-    url: 'https://twitter.com/jouwaccount',
-    label: 'Twitter'
-  },
-  {
-    platform: 'instagram',
-    url: 'https://instagram.com/jouwaccount',
-  },
-  // ... meer platforms
+  { platform: 'twitter', url: 'https://twitter.com/jouwaccount', label: 'Twitter' },
+  { platform: 'instagram', url: 'https://instagram.com/jouwaccount' },
 ];
 
 export default function TournamentPage() {
   return (
-    <div>
-      <Socials
-        title="Volg het toernooi"
-        description="Blijf op de hoogte via onze sociale media kanalen"
-        socialLinks={socialLinks}
-      />
-    </div>
+    <Socials
+      title="Volg het toernooi"
+      description="Blijf op de hoogte via onze socials"
+      socialLinks={socialLinks}
+    />
   );
+}
+```
+
+#### Bonus: Configurator gebruiken
+
+```tsx
+import SocialsConfigurator from '@/components/SocialsConfigurator';
+
+export default function BuilderPage() {
+  return <SocialsConfigurator />;
 }
 ```
 
@@ -76,7 +81,8 @@ De component is volledig whitelabel. Zie de README.md voor alle customisatie opt
 ```
 jouw-project/
 ├── components/
-│   └── Socials.tsx    ← Kopieer dit bestand
+│   ├── Socials.tsx
+│   └── SocialsConfigurator.tsx (optioneel)
 └── ...
 ```
 
