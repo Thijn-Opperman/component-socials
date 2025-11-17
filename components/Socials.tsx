@@ -72,6 +72,13 @@ export interface SocialsProps {
   hoverScale?: boolean; // Enable/disable hover scale effect
   showLabels?: boolean; // Show/hide platform labels
   iconSize?: 'sm' | 'md' | 'lg' | 'xl'; // Icon size
+  styleOverrides?: StyleOverrides;
+}
+
+export interface StyleOverrides {
+  section?: React.CSSProperties;
+  container?: React.CSSProperties;
+  card?: React.CSSProperties;
 }
 
 const getPlatformIcon = (platform: SocialLink['platform'], iconSize: string): React.ReactNode => {
@@ -176,7 +183,8 @@ export default function Socials({
   borderRadius = 'rounded-lg',
   hoverScale = true,
   showLabels = true,
-  iconSize = 'sm'
+  iconSize = 'sm',
+  styleOverrides
 }: SocialsProps) {
   if (!socialLinks || socialLinks.length === 0) {
     return null;
@@ -202,9 +210,59 @@ export default function Socials({
   // Merge platform colors met theme overrides
   const platformColors = { ...defaultPlatformColors, ...theme?.platformColors };
 
+  const cardCustomStyle = React.useMemo<React.CSSProperties | undefined>(() => {
+    if (!styleOverrides?.card) {
+      return undefined;
+    }
+
+    const {
+      background,
+      color,
+      borderColor,
+      boxShadow,
+      backdropFilter,
+      ...rest
+    } = styleOverrides.card;
+
+    const style: React.CSSProperties & Record<string, string> = {
+      ...rest,
+    };
+
+    if (background) {
+      style['--card-bg'] = background as string;
+    }
+
+    if (color) {
+      style['--card-text'] = color as string;
+    }
+
+    if (borderColor) {
+      style['--card-border'] = borderColor as string;
+    }
+
+    if (boxShadow) {
+      style['--card-shadow'] = boxShadow as string;
+    }
+
+    if (backdropFilter) {
+      style['--card-backdrop'] = backdropFilter as string;
+    }
+
+    return style;
+  }, [styleOverrides?.card]);
+
+  const cardBgClass = styleOverrides?.card?.background ? 'bg-[var(--card-bg)]' : cardBg;
+  const cardTextClass = styleOverrides?.card?.color ? 'text-[var(--card-text)]' : cardText;
+  const cardBorderClass = styleOverrides?.card?.borderColor ? 'border-[var(--card-border)]' : cardBorder;
+  const cardShadowClass = styleOverrides?.card?.boxShadow ? 'shadow-[var(--card-shadow)]' : '';
+  const cardBackdropClass = styleOverrides?.card?.backdropFilter ? '[backdrop-filter:var(--card-backdrop)]' : '';
+
   return (
-    <section className={`w-full py-8 px-4 sm:px-6 lg:px-8 ${sectionBg} ${className}`}>
-      <div className={`max-w-4xl mx-auto ${containerClassName}`}>
+    <section
+      className={`w-full py-8 px-4 sm:px-6 lg:px-8 ${sectionBg} ${className}`}
+      style={styleOverrides?.section}
+    >
+      <div className={`max-w-4xl mx-auto ${containerClassName}`} style={styleOverrides?.container}>
         {(title || description) && (
           <div className="text-center mb-6">
             {title && (
@@ -234,8 +292,8 @@ export default function Socials({
             // Card styling classes - alle cards even groot
             const baseCardClasses = `
               group relative flex flex-col items-center justify-center
-              ${padding} ${borderRadius} border-2 ${cardBorder}
-              ${cardBg} ${cardText}
+              ${padding} ${borderRadius} border-2 ${cardBorderClass}
+              ${cardBgClass} ${cardTextClass}
               transition-all duration-300 ease-in-out
               ${hoverScale ? 'hover:scale-105' : ''}
               hover:shadow-lg hover:border-transparent
@@ -243,6 +301,7 @@ export default function Socials({
               ${cardHoverBg} ${cardHoverText}
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500
               w-full h-full aspect-square
+              ${cardShadowClass} ${cardBackdropClass}
               ${cardClassName}
             `.trim().replace(/\s+/g, ' ');
 
@@ -254,6 +313,7 @@ export default function Socials({
                 rel="noopener noreferrer"
                 className={baseCardClasses}
                 aria-label={`Volg ons op ${label}`}
+                style={cardCustomStyle}
               >
                 <div className={`${showLabels ? 'mb-1.5' : ''} transition-transform duration-300 ${hoverScale ? 'group-hover:scale-110' : ''}`}>
                   {icon}
