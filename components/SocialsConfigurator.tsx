@@ -184,7 +184,7 @@ export default function SocialsConfigurator() {
       const next = [
         ...prev,
         {
-          platform: 'website',
+          platform: 'website' as const,
           url: '',
           label: 'Nieuwe link',
         },
@@ -357,23 +357,23 @@ export default function SocialsConfigurator() {
           <div className="border-t border-gray-100 dark:border-gray-800 p-5 space-y-4">
             <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Look & Feel</p>
             <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: 'Hero van', key: 'bgFrom' },
-                { label: 'Hero naar', key: 'bgTo' },
-                { label: 'Sectie van', key: 'sectionFrom' },
-                { label: 'Sectie naar', key: 'sectionTo' },
-                { label: 'Accent 1', key: 'accentFrom' },
-                { label: 'Accent 2', key: 'accentTo' },
-              ].map(({ label, key }) => (
+              {(
+                [
+                  { label: 'Hero van', key: 'bgFrom' },
+                  { label: 'Hero naar', key: 'bgTo' },
+                  { label: 'Sectie van', key: 'sectionFrom' },
+                  { label: 'Sectie naar', key: 'sectionTo' },
+                  { label: 'Accent 1', key: 'accentFrom' },
+                  { label: 'Accent 2', key: 'accentTo' },
+                ] satisfies { label: string; key: keyof AppearanceState }[]
+              ).map(({ label, key }) => (
                 <label key={key} className="text-[10px] font-semibold uppercase text-gray-500">
                   {label}
                   <input
                     type="color"
                     className="mt-1 h-10 w-full cursor-pointer rounded border border-gray-200"
-                    value={appearance[key as keyof AppearanceState] as string}
-                    onChange={(event) =>
-                      handleAppearanceChange(key as keyof AppearanceState, event.target.value as AppearanceState[typeof key])
-                    }
+                    value={appearance[key] as string}
+                    onChange={(event) => handleAppearanceChange(key, event.target.value as AppearanceState[typeof key])}
                   />
                 </label>
               ))}

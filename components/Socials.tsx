@@ -215,31 +215,29 @@ export default function Socials({
       ...rest
     } = styleOverrides.card;
 
-    const style: React.CSSProperties & Record<string, string> = {
-      ...rest,
-    };
-
+    const styleVars: Record<string, string> = {};
+    
     if (background) {
-      style['--card-bg'] = background as string;
+      styleVars['--card-bg'] = background as string;
     }
 
     if (color) {
-      style['--card-text'] = color as string;
+      styleVars['--card-text'] = color as string;
     }
 
     if (borderColor) {
-      style['--card-border'] = borderColor as string;
+      styleVars['--card-border'] = borderColor as string;
     }
 
     if (boxShadow) {
-      style['--card-shadow'] = boxShadow as string;
+      styleVars['--card-shadow'] = boxShadow as string;
     }
 
     if (backdropFilter) {
-      style['--card-backdrop'] = backdropFilter as string;
+      styleVars['--card-backdrop'] = backdropFilter as string;
     }
 
-    return style;
+    return { ...rest, ...styleVars };
   }, [styleOverrides?.card]);
 
   const cardBgClass = styleOverrides?.card?.background ? 'bg-[var(--card-bg)]' : cardBg;
