@@ -177,30 +177,7 @@ export default function Socials({
   iconSize = 'sm',
   styleOverrides
 }: SocialsProps) {
-  if (!socialLinks || socialLinks.length === 0) {
-    return null;
-  }
-
-  // Grid layout - verdeel items over het scherm, alle items even groot
-  // Gebruik auto-fit om items automatisch te verdelen over beschikbare ruimte
-  const gridClass = `grid grid-cols-[repeat(auto-fit,minmax(90px,1fr))] ${gap} justify-items-stretch`;
-
-  // Theme defaults
-  const sectionBg = theme?.sectionBackground || 'bg-transparent';
-  const titleColor = theme?.titleColor || 'text-gray-900 dark:text-white';
-  const descColor = theme?.descriptionColor || 'text-gray-600 dark:text-gray-400';
-  const cardBg = theme?.cardBackground || 'bg-white dark:bg-gray-800';
-  const cardBorder = theme?.cardBorder || 'border-gray-200 dark:border-gray-700';
-  const cardText = theme?.cardText || 'text-gray-700 dark:text-gray-300';
-  const cardHoverBg = theme?.cardHoverBackground || '';
-  const cardHoverText = theme?.cardHoverText || '';
-
-  // Icon size class
-  const iconSizeClass = iconSizes[iconSize];
-
-  // Merge platform colors met theme overrides
-  const platformColors = { ...defaultPlatformColors, ...theme?.platformColors };
-
+  // Hooks moeten altijd in dezelfde volgorde worden aangeroepen, vóór early returns
   const cardCustomStyle = React.useMemo<React.CSSProperties | undefined>(() => {
     if (!styleOverrides?.card) {
       return undefined;
@@ -238,7 +215,31 @@ export default function Socials({
     }
 
     return { ...rest, ...styleVars };
-  }, [styleOverrides?.card]);
+  }, [styleOverrides]);
+
+  if (!socialLinks || socialLinks.length === 0) {
+    return null;
+  }
+
+  // Grid layout - verdeel items over het scherm, alle items even groot
+  // Gebruik auto-fit om items automatisch te verdelen over beschikbare ruimte
+  const gridClass = `grid grid-cols-[repeat(auto-fit,minmax(90px,1fr))] ${gap} justify-items-stretch`;
+
+  // Theme defaults
+  const sectionBg = theme?.sectionBackground || 'bg-transparent';
+  const titleColor = theme?.titleColor || 'text-gray-900 dark:text-white';
+  const descColor = theme?.descriptionColor || 'text-gray-600 dark:text-gray-400';
+  const cardBg = theme?.cardBackground || 'bg-white dark:bg-gray-800';
+  const cardBorder = theme?.cardBorder || 'border-gray-200 dark:border-gray-700';
+  const cardText = theme?.cardText || 'text-gray-700 dark:text-gray-300';
+  const cardHoverBg = theme?.cardHoverBackground || '';
+  const cardHoverText = theme?.cardHoverText || '';
+
+  // Icon size class
+  const iconSizeClass = iconSizes[iconSize];
+
+  // Merge platform colors met theme overrides
+  const platformColors = { ...defaultPlatformColors, ...theme?.platformColors };
 
   const cardBgClass = styleOverrides?.card?.background ? 'bg-[var(--card-bg)]' : cardBg;
   const cardTextClass = styleOverrides?.card?.color ? 'text-[var(--card-text)]' : cardText;
